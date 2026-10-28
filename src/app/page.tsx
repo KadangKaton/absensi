@@ -3,6 +3,14 @@
 import { useState, useRef, useEffect } from 'react'
 
 // ─── Toast Component ─────────────────────────────────────────────────────────
+
+import { Playfair_Display } from 'next/font/google';
+
+const elegantFont = Playfair_Display({ 
+  subsets: ['latin'],
+  weight: ['400', '600', '700']
+});
+
 function Toast({
   message,
   visible,
@@ -85,7 +93,7 @@ export default function GuestbookPage() {
 
       if (res.ok) {
         setName('')
-        setToastMessage(`Sudah mampir di Nana Buket! ✨`)
+        setToastMessage(`Sudah mampir di Nana Bouquet! ✨`)
         setToastVisible(true)
         inputRef.current?.focus()
       } else {
@@ -178,7 +186,7 @@ export default function GuestbookPage() {
                 backgroundClip: 'text',
               }}
             >
-              Nana Buket
+              Nana Bouquet
             </h1>
 
             <p className="mt-3 text-[#9b6b82] text-base font-light tracking-wide">
@@ -212,9 +220,8 @@ export default function GuestbookPage() {
                   maxLength={80}
                   autoFocus
                   disabled={loading}
-                  className="input-elegant w-full rounded-2xl px-5 py-4 text-lg font-medium text-[#3d2535] placeholder-[#c49aad] disabled:opacity-60"
-                  style={{ fontFamily: "'Inter', sans-serif" }}
-                />
+                  className={`${elegantFont.className} w-full text-center font-semibold text-4xl md:text-6xl py-6 md:py-10 text-pink-800 bg-white/70 backdrop-blur-md border-2 border-pink-300 rounded-3xl shadow-lg focus:outline-none focus:border-pink-500 focus:ring-4 focus:ring-pink-200 transition-all placeholder:text-pink-300 placeholder:font-normal placeholder:text-3xl md:placeholder:text-5xl`}
+/>
                 {/* small flower icon inside input */}
                 <span className="absolute right-4 top-1/2 -translate-y-1/2 text-[#d4547a] opacity-50 pointer-events-none text-lg">
                   🌷
@@ -247,7 +254,7 @@ export default function GuestbookPage() {
 
           {/* Footer */}
           <p className="text-center mt-8 text-xs text-[#c49aad] tracking-wider">
-            Nana Buket &copy; 2024 &nbsp;·&nbsp; Made with 🌸
+            Nana Bouquet &copy; 2024 &nbsp;·&nbsp; Made with 🌸
           </p>
         </div>
       </main>
