@@ -3,7 +3,6 @@
 import { useState, useEffect, useCallback } from 'react'
 import type { Attendance } from '@/lib/supabase'
 
-// ─── Format timestamp to Indonesian locale ────────────────────────────────────
 function formatDate(iso: string): { date: string; time: string } {
   const d = new Date(iso)
   const date = d.toLocaleDateString('id-ID', {
@@ -20,9 +19,8 @@ function formatDate(iso: string): { date: string; time: string } {
   return { date, time }
 }
 
-// ─── Export to CSV ────────────────────────────────────────────────────────────
 function exportToCSV(data: Attendance[]) {
-  const BOM = '\uFEFF' // UTF-8 BOM for Excel compatibility
+  const BOM = '\uFEFF'
   const header = ['No', 'Nama', 'Tanggal', 'Waktu']
   const rows = data.map((row, i) => {
     const d = new Date(row.created_at)
@@ -37,7 +35,6 @@ function exportToCSV(data: Attendance[]) {
       minute: '2-digit',
       second: '2-digit',
     })
-    // Escape double-quotes in name
     const safeName = `"${row.name.replace(/"/g, '""')}"`
     return [i + 1, safeName, `"${date}"`, `"${time}"`].join(',')
   })
@@ -49,14 +46,13 @@ function exportToCSV(data: Attendance[]) {
   const today = new Date().toISOString().slice(0, 10)
   const link = document.createElement('a')
   link.setAttribute('href', url)
-  link.setAttribute('download', `daftar-hadir-nana-buket-${today}.csv`)
+  link.setAttribute('download', `daftar-hadir-nana-bouquet-${today}.csv`)
   document.body.appendChild(link)
   link.click()
   document.body.removeChild(link)
   URL.revokeObjectURL(url)
 }
 
-// ─── Admin Page ───────────────────────────────────────────────────────────────
 export default function AdminPage() {
   const [attendances, setAttendances] = useState<Attendance[]>([])
   const [loading, setLoading] = useState(true)
@@ -99,7 +95,6 @@ export default function AdminPage() {
 
   return (
     <>
-      {/* Background */}
       <div
         className="fixed inset-0 -z-10"
         style={{
@@ -118,8 +113,8 @@ export default function AdminPage() {
         }}
       />
 
-      <main className="min-h-screen px-4 py-8 sm:px-6 lg:px-8">
-        <div className="max-w-4xl mx-auto">
+      <main className="min-h-screen px-4 py-8 sm:px-6 lg:px-8 flex flex-col items-center">
+        <div className="w-full max-w-4xl">
 
           {/* Header */}
           <div className="mb-8">
@@ -133,7 +128,7 @@ export default function AdminPage() {
                   backgroundClip: 'text',
                 }}
               >
-                Nana Buket
+                Nana Bouquet
               </h1>
             </div>
             <p className="text-[#9b6b82] text-sm ml-12">Dashboard Admin · Daftar Hadir</p>
@@ -171,36 +166,42 @@ export default function AdminPage() {
               </div>
 
               {/* Actions */}
-              <div className="flex gap-2 w-full sm:w-auto">
+              <div className="flex items-center gap-2 w-full sm:w-auto">
                 <button
                   onClick={fetchData}
                   disabled={loading}
-                  className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl border border-pink-200 bg-white/70 text-[#d4547a] text-sm font-medium hover:bg-pink-50 transition-all disabled:opacity-50"
+                  className="flex-1 sm:flex-none inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl border border-pink-200 bg-white/70 text-[#d4547a] text-sm font-medium hover:bg-pink-50 transition-all disabled:opacity-50 cursor-pointer"
                 >
-                  <svg className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <svg 
+                    className={`flex-shrink-0 ${loading ? 'animate-spin' : ''}`} 
+                    style={{ width: '16px', height: '16px' }} 
+                    fill="none" 
+                    viewBox="0 0 24 24" 
+                    stroke="currentColor"
+                  >
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
                   </svg>
-                  Refresh
+                  <span>Refresh</span>
                 </button>
                 <button
                   onClick={handleExport}
                   disabled={loading || filtered.length === 0 || exporting}
-                  className="btn-floral flex-1 sm:flex-none flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl text-white text-sm font-semibold disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none disabled:shadow-none"
+                  className="btn-floral flex-1 sm:flex-none inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl text-white text-sm font-semibold disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none disabled:shadow-none cursor-pointer"
                 >
                   {exporting ? (
                     <>
-                      <svg className="animate-spin w-4 h-4" fill="none" viewBox="0 0 24 24">
+                      <svg className="animate-spin flex-shrink-0" style={{ width: '16px', height: '16px' }} fill="none" viewBox="0 0 24 24">
                         <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
                         <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
                       </svg>
-                      Mengekspor...
+                      <span>Mengekspor...</span>
                     </>
                   ) : (
                     <>
-                      <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <svg className="flex-shrink-0" style={{ width: '16px', height: '16px' }} fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                       </svg>
-                      Download CSV
+                      <span>Download CSV</span>
                     </>
                   )}
                 </button>
@@ -210,7 +211,7 @@ export default function AdminPage() {
 
           {/* Search */}
           <div className="glass-card rounded-2xl px-4 py-3 mb-4 flex items-center gap-3">
-            <svg className="w-4 h-4 text-[#c49aad] flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg className="text-[#c49aad] flex-shrink-0" style={{ width: '16px', height: '16px' }} fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
             </svg>
             <input
@@ -221,8 +222,8 @@ export default function AdminPage() {
               className="flex-1 bg-transparent text-sm text-[#3d2535] placeholder-[#c49aad] outline-none"
             />
             {search && (
-              <button onClick={() => setSearch('')} className="text-[#c49aad] hover:text-[#d4547a] transition-colors">
-                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <button onClick={() => setSearch('')} className="text-[#c49aad] hover:text-[#d4547a] transition-colors flex items-center cursor-pointer">
+                <svg className="flex-shrink-0" style={{ width: '16px', height: '16px' }} fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                 </svg>
               </button>
@@ -240,7 +241,7 @@ export default function AdminPage() {
               <div className="flex flex-col items-center justify-center py-16 gap-3">
                 <span className="text-4xl">😥</span>
                 <p className="text-sm text-[#9b6b82] text-center">{error}</p>
-                <button onClick={fetchData} className="text-sm text-[#d4547a] hover:underline font-medium">Coba lagi</button>
+                <button onClick={fetchData} className="text-sm text-[#d4547a] hover:underline font-medium cursor-pointer">Coba lagi</button>
               </div>
             ) : filtered.length === 0 ? (
               <div className="flex flex-col items-center justify-center py-16 gap-2">
@@ -281,20 +282,19 @@ export default function AdminPage() {
                           </td>
                           <td className="px-4 py-4">
                             <div className="flex items-center gap-3">
-                              {/* Avatar */}
+                              {/* Avatar diganti ikon bunga agar bersih dari huruf ganda */}
                               <div
-                                className="flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center text-white text-sm font-semibold"
+                                className="flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center text-sm shadow-sm select-none"
                                 style={{
-                                  background: `linear-gradient(135deg, #e8a0bc, #d4547a)`,
+                                  background: `linear-gradient(135deg, #f9e8ee, #f4c2d4)`,
                                 }}
                               >
-                                {row.name.charAt(0).toUpperCase()}
+                                🌸
                               </div>
                               <span className="text-sm font-medium text-[#3d2535]">
                                 {row.name}
                               </span>
                             </div>
-                            {/* Show date on mobile */}
                             <p className="text-xs text-[#c49aad] mt-1 sm:hidden ml-11">{date}</p>
                           </td>
                           <td className="px-4 py-4 text-sm text-[#6b3a52] hidden sm:table-cell">
@@ -316,7 +316,7 @@ export default function AdminPage() {
 
           {/* Footer */}
           <p className="text-center mt-6 text-xs text-[#c49aad]">
-            Nana Buket Admin &copy; 2024
+            Nana Bouquet Admin &copy; 2024
           </p>
         </div>
       </main>
