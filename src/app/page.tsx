@@ -81,17 +81,19 @@ export default function GuestbookPage() {
         body: JSON.stringify({ name: trimmed }),
       })
 
+      const json = await res.json()
+
       if (res.ok) {
         setName('')
         setToastMessage(`Sudah mampir di Nana Buket! ✨`)
         setToastVisible(true)
         inputRef.current?.focus()
       } else {
-        const err = await res.json()
-        alert(err.error || 'Terjadi kesalahan, silakan coba lagi.')
+        // Show the real error message from the server
+        alert(json.error ?? `Gagal menyimpan (HTTP ${res.status}). Coba lagi.`)
       }
-    } catch {
-      alert('Tidak dapat terhubung. Periksa koneksi internet Anda.')
+    } catch (err) {
+      alert(`Tidak dapat terhubung ke server.\n\n${err instanceof Error ? err.message : String(err)}`)
     } finally {
       setLoading(false)
     }

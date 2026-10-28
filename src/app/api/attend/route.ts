@@ -2,8 +2,18 @@ import { NextRequest, NextResponse } from 'next/server'
 import { getSupabase } from '@/lib/supabase'
 
 export async function POST(request: NextRequest) {
+  // Check env vars first — give a clear error if missing
+  if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+    console.error('Missing Supabase environment variables.')
+    return NextResponse.json(
+      { error: 'Konfigurasi server belum lengkap. Hubungi admin.' },
+      { status: 503 }
+    )
+  }
+
   try {
-    const { name } = await request.json()
+    const body = await request.json()
+    const { name } = body
 
     if (!name || typeof name !== 'string' || name.trim().length === 0) {
       return NextResponse.json(
@@ -21,24 +31,33 @@ export async function POST(request: NextRequest) {
       .single()
 
     if (error) {
-      console.error('Supabase error:', error)
+      console.error('Supabase insert error:', JSON.stringify(error))
+      // Return the actual Supabase error code so it's easier to debug
       return NextResponse.json(
-        { error: 'Gagal menyimpan data.' },
+        { error: `Gagal menyimpan data. (${error.code ?? error.message})` },
         { status: 500 }
       )
     }
 
     return NextResponse.json({ success: true, data }, { status: 201 })
-  } catch (err) {
-    console.error('Unexpected error:', err)
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : String(err)
+    console.error('POST /api/attend unexpected error:', message)
     return NextResponse.json(
-      { error: 'Terjadi kesalahan.' },
+      { error: `Terjadi kesalahan: ${message}` },
       { status: 500 }
     )
   }
 }
 
 export async function GET() {
+  if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+    return NextResponse.json(
+      { error: 'Konfigurasi server belum lengkap.' },
+      { status: 503 }
+    )
+  }
+
   try {
     const supabase = getSupabase()
 
@@ -48,12 +67,20 @@ export async function GET() {
       .order('created_at', { ascending: false })
 
     if (error) {
-      return NextResponse.json({ error: 'Gagal mengambil data.' }, { status: 500 })
+      console.error('Supabase select error:', JSON.stringify(error))
+      return NextResponse.json(
+        { error: `Gagal mengambil data. (${error.code ?? error.message})` },
+        { status: 500 }
+      )
     }
 
     return NextResponse.json({ data }, { status: 200 })
-  } catch (err) {
-    console.error('Unexpected error:', err)
-    return NextResponse.json({ error: 'Terjadi kesalahan.' }, { status: 500 })
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : String(err)
+    console.error('GET /api/attend unexpected error:', message)
+    return NextResponse.json(
+      { error: `Terjadi kesalahan: ${message}` },
+      { status: 500 }
+    )
   }
 }
