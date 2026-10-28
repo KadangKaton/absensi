@@ -24,22 +24,19 @@ export async function POST(request: NextRequest) {
 
     const supabase = getSupabase()
 
-    const { data, error } = await supabase
+    const { error } = await supabase
       .from('attendances')
       .insert([{ name: name.trim() }])
-      .select()
-      .single()
 
     if (error) {
       console.error('Supabase insert error:', JSON.stringify(error))
-      // Return the actual Supabase error code so it's easier to debug
       return NextResponse.json(
         { error: `Gagal menyimpan data. (${error.code ?? error.message})` },
         { status: 500 }
       )
     }
 
-    return NextResponse.json({ success: true, data }, { status: 201 })
+    return NextResponse.json({ success: true }, { status: 201 })
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : String(err)
     console.error('POST /api/attend unexpected error:', message)
