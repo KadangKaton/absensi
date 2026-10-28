@@ -1,9 +1,6 @@
 'use client'
 
 import { useState, useRef, useEffect } from 'react'
-
-// ─── Toast Component ─────────────────────────────────────────────────────────
-
 import { Playfair_Display } from 'next/font/google';
 
 const elegantFont = Playfair_Display({ 
@@ -58,7 +55,6 @@ function Toast({
   )
 }
 
-// ─── Floating Petals ─────────────────────────────────────────────────────────
 const petals = [
   { emoji: '🌸', style: { top: '8%', left: '5%', animationDelay: '0s', animationDuration: '5s', opacity: 0.55, fontSize: '1.6rem' } },
   { emoji: '🌺', style: { top: '15%', right: '8%', animationDelay: '1.2s', animationDuration: '4.5s', opacity: 0.45, fontSize: '1.2rem' } },
@@ -68,7 +64,6 @@ const petals = [
   { emoji: '🌸', style: { top: '70%', right: '2%', animationDelay: '0.3s', animationDuration: '5.2s', opacity: 0.45, fontSize: '1.3rem' } },
 ]
 
-// ─── Main Page ────────────────────────────────────────────────────────────────
 export default function GuestbookPage() {
   const [name, setName] = useState('')
   const [loading, setLoading] = useState(false)
@@ -97,7 +92,6 @@ export default function GuestbookPage() {
         setToastVisible(true)
         inputRef.current?.focus()
       } else {
-        // Show the real error message from the server
         alert(json.error ?? `Gagal menyimpan (HTTP ${res.status}). Coba lagi.`)
       }
     } catch (err) {
@@ -113,7 +107,6 @@ export default function GuestbookPage() {
 
   return (
     <>
-      {/* Gradient background */}
       <div
         className="fixed inset-0 -z-10"
         style={{
@@ -121,7 +114,6 @@ export default function GuestbookPage() {
             'radial-gradient(ellipse 80% 80% at 20% 10%, rgba(249,232,238,0.95) 0%, rgba(253,246,249,0.8) 40%, rgba(255,255,255,0.9) 100%)',
         }}
       />
-      {/* Decorative blobs */}
       <div
         className="fixed -z-10 rounded-full blur-3xl opacity-40"
         style={{
@@ -143,7 +135,6 @@ export default function GuestbookPage() {
         }}
       />
 
-      {/* Floating petals */}
       {petals.map((p, i) => (
         <div
           key={i}
@@ -154,31 +145,27 @@ export default function GuestbookPage() {
         </div>
       ))}
 
-      {/* Toast */}
       <Toast
         message={toastMessage}
         visible={toastVisible}
         onDone={() => setToastVisible(false)}
       />
 
-      {/* Main content */}
       <main className="relative z-10 min-h-screen flex flex-col items-center justify-center px-4 py-12">
-        <div className="w-full max-w-md animate-fade-in-up">
+        <div className="w-full max-w-md lg:max-w-5xl mx-auto animate-fade-in-up">
 
-          {/* Header */}
-          <div className="text-center mb-10">
-            {/* Floral icon */}
-            <div className="inline-flex items-center justify-center w-20 h-20 rounded-full mb-5 shadow-lg"
+          <div className="text-center mb-10 lg:mb-16">
+            <div className="inline-flex items-center justify-center w-20 h-20 lg:w-32 lg:h-32 rounded-full mb-5 lg:mb-8 shadow-lg"
               style={{
                 background: 'linear-gradient(135deg, #f9e8ee 0%, #f4c2d4 50%, #e8a0bc 100%)',
                 boxShadow: '0 8px 32px rgba(212, 84, 122, 0.25), inset 0 1px 0 rgba(255,255,255,0.7)',
               }}
             >
-              <span className="text-4xl">🌸</span>
+              <span className="text-4xl lg:text-7xl">🌸</span>
             </div>
 
             <h1
-              className="font-serif-elegant text-5xl sm:text-6xl font-bold leading-none tracking-tight"
+              className="font-serif-elegant text-5xl sm:text-6xl lg:text-8xl font-bold leading-none tracking-tight"
               style={{
                 background: 'linear-gradient(135deg, #c4627e 0%, #d4547a 50%, #e8a0bc 100%)',
                 WebkitBackgroundClip: 'text',
@@ -189,41 +176,45 @@ export default function GuestbookPage() {
               Nana Bouquet
             </h1>
 
-            <p className="mt-3 text-[#9b6b82] text-base font-light tracking-wide">
+            <p className="mt-3 lg:mt-6 text-[#9b6b82] text-base lg:text-3xl font-light tracking-wide">
               ✦ &nbsp;Bouquet of Happiness&nbsp; ✦
             </p>
           </div>
 
-          {/* Glass card */}
-          <div className="glass-card rounded-3xl p-7 sm:p-9">
-            <div className="text-center mb-7">
+          <div className="glass-card rounded-3xl p-7 sm:p-9 lg:p-16">
+            <div className="text-center mb-7 lg:mb-12">
               <h2
-                className="font-serif-elegant text-xl font-semibold text-[#3d2535]"
+                className="font-serif-elegant text-xl lg:text-4xl font-semibold text-[#3d2535]"
               >
                 Daftar Hadir
               </h2>
-              <p className="mt-2 text-sm text-[#9b6b82] leading-relaxed">
+              <p className="mt-2 lg:mt-4 text-sm lg:text-2xl text-[#9b6b82] leading-relaxed">
                 Hai! Senang sekali Kamu mampir 💕<br />
                 Tulis nama kamu dan tekan <span className="font-medium text-[#d4547a]">Hadir</span>.
               </p>
             </div>
 
-            <form onSubmit={handleSubmit} className="space-y-4">
+            <form onSubmit={handleSubmit} className="space-y-4 lg:space-y-12">
               <div className="relative">
                 <input
-                  ref={inputRef}
-                  type="text"
-                  value={name}
-                  onChange={e => setName(e.target.value)}
-                  onKeyDown={handleKeyDown}
-                  placeholder="Nama kamu..."
-                  maxLength={80}
-                  autoFocus
-                  disabled={loading}
-                  className={`${elegantFont.className} w-full text-center font-semibold text-4xl md:text-6xl py-6 md:py-10 text-pink-800 bg-white/70 backdrop-blur-md border-2 border-pink-300 rounded-3xl shadow-lg focus:outline-none focus:border-pink-500 focus:ring-4 focus:ring-pink-200 transition-all placeholder:text-pink-300 placeholder:font-normal placeholder:text-3xl md:placeholder:text-5xl`}
-/>
-                {/* small flower icon inside input */}
-                <span className="absolute right-4 top-1/2 -translate-y-1/2 text-[#d4547a] opacity-50 pointer-events-none text-lg">
+                 ref={inputRef}
+                 type="text"
+                 value={name}
+                 onChange={e => setName(e.target.value)}
+                 onKeyDown={handleKeyDown}
+                 placeholder="Ketik nama kamu..."
+                 maxLength={150}
+                 autoFocus
+                 disabled={loading}
+                 className={`${elegantFont.className} w-full text-center text-pink-800 bg-transparent border-0 outline-none focus:outline-none focus:ring-0 shadow-none transition-all placeholder:text-pink-200 placeholder:font-light`}
+                 style={{
+                   fontSize: '4.5rem', // Ukuran font raksasa yang langsung tembus tanpa tergantung Tailwind
+                   lineHeight: '1.2',
+                   paddingTop: '2.5rem',
+                   paddingBottom: '2.5rem',
+                 }}
+                />
+                <span className="absolute right-4 lg:right-12 top-1/2 -translate-y-1/2 text-[#d4547a] opacity-50 pointer-events-none text-lg lg:text-5xl">
                   🌷
                 </span>
               </div>
@@ -231,11 +222,11 @@ export default function GuestbookPage() {
               <button
                 type="submit"
                 disabled={!name.trim() || loading}
-                className="btn-floral w-full rounded-2xl py-4 text-white font-semibold text-base tracking-wide disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none disabled:shadow-none"
+                className="btn-floral w-full rounded-2xl py-4 lg:py-8 text-white font-semibold text-base lg:text-3xl tracking-wide disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none disabled:shadow-none transition-all"
               >
                 {loading ? (
-                  <span className="flex items-center justify-center gap-2">
-                    <svg className="animate-spin w-4 h-4" fill="none" viewBox="0 0 24 24">
+                  <span className="flex items-center justify-center gap-2 lg:gap-4">
+                    <svg className="animate-spin w-4 h-4 lg:w-8 lg:h-8" fill="none" viewBox="0 0 24 24">
                       <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
                       <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
                     </svg>
@@ -247,13 +238,12 @@ export default function GuestbookPage() {
               </button>
             </form>
 
-            <p className="mt-5 text-center text-xs text-[#c49aad]">
+            <p className="mt-5 lg:mt-10 text-center text-xs lg:text-xl text-[#c49aad]">
               Tekan Enter atau klik tombol untuk konfirmasi kehadiran
             </p>
           </div>
 
-          {/* Footer */}
-          <p className="text-center mt-8 text-xs text-[#c49aad] tracking-wider">
+          <p className="text-center mt-8 lg:mt-16 text-xs lg:text-xl text-[#c49aad] tracking-wider">
             Nana Bouquet &copy; 2024 &nbsp;·&nbsp; Made with 🌸
           </p>
         </div>
