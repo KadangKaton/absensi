@@ -244,7 +244,7 @@ export default function GuestbookPage() {
           </div>
 
           <p className="text-center mt-8 lg:mt-16 text-xs lg:text-xl text-[#c49aad] tracking-wider">
-            Nana Bouquet &copy; 2024 &nbsp;·&nbsp; Made with 🌸
+            Nana Bouquet &copy; 2026 &nbsp;·&nbsp; Made with Love🌸
           </p>
         </div>
       </main>
